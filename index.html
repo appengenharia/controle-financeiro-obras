@@ -1,201 +1,301 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover" />
-  <title>Controle Financeiro de Obras</title>
-
-  <link rel="manifest" href="manifest.json" />
-  <meta name="theme-color" content="#0b2a4a"/>
-
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>CFO - Controle Financeiro de Obras</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0b2a4a">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
 <body>
-  <div class="topbar">
-    <div class="brand" id="brandTitle">Controle Financeiro de Obras</div>
-    <div class="rightTop">
-      <div id="pillUser" class="pill hidden"></div>
-      <button id="btnLogout" class="btn btn-ghost hidden" onclick="App.logout()">Sair</button>
+    <div class="topbar">
+        <div class="brand" id="brandTitle">CFO - Controle Financeiro</div>
+        <div class="rightTop">
+            <div id="pillUser" class="pill hidden"></div>
+            <button id="btnLogout" class="btn btn-ghost hidden" onclick="App.logout()">Sair</button>
+        </div>
     </div>
-  </div>
 
-  <!-- LOGIN -->
-  <section id="loginArea" class="wrap">
-    <div class="card">
-      <h2>Login</h2>
-      <p class="muted">Entre com seu usuário e senha.</p>
-
-      <label>Perfil</label>
-      <select id="loginRole">
-        <option value="USER">Usuário</option>
-        <option value="ADMIN">Administrador</option>
-      </select>
-
-      <label>Usuário</label>
-      <input id="loginUser" placeholder="ex: joao" />
-
-      <label>Senha</label>
-      <div class="passRow">
-        <input id="loginPass" type="password" placeholder="••••••••" />
-        <button class="eyeBtn" type="button" onclick="App.togglePass('loginPass')">👁</button>
-      </div>
-
-      <button class="btn btn-primary full" onclick="App.login()">Entrar</button>
-      <div id="loginMsg" class="msg"></div>
-
-      <div class="muted small" style="margin-top:10px;">
-        Primeiro acesso: senha padrão <b>user123</b> (será obrigatório trocar).
-      </div>
+    <div id="offlineBanner" class="offline-banner hidden">
+        Você está offline. Algumas funcionalidades podem estar limitadas.
     </div>
-  </section>
 
-  <!-- FORCE CHANGE PASSWORD -->
-  <section id="pwArea" class="wrap hidden">
-    <div class="card">
-      <h2>Trocar senha (obrigatório)</h2>
-      <p class="muted">Defina uma nova senha para começar a usar.</p>
-
-      <label>Nova senha</label>
-      <div class="passRow">
-        <input id="pw1" type="password" />
-        <button class="eyeBtn" type="button" onclick="App.togglePass('pw1')">👁</button>
-      </div>
-
-      <label>Confirmar senha</label>
-      <div class="passRow">
-        <input id="pw2" type="password" />
-        <button class="eyeBtn" type="button" onclick="App.togglePass('pw2')">👁</button>
-      </div>
-
-      <button class="btn btn-primary full" onclick="App.changePassword()">Salvar senha</button>
-      <div id="pwMsg" class="msg"></div>
-    </div>
-  </section>
-
-  <!-- APP -->
-  <section id="appArea" class="main hidden">
-    <div class="left">
-      <div class="card">
-        <h3>Lançar despesa</h3>
-        <p class="muted">Troque a obra quando quiser. Não precisa confirmar.</p>
-
-        <label>Obra</label>
-        <select id="obraSelect" onchange="App.onChangeObra()"></select>
-
-        <label>Data</label>
-        <input id="inpData" type="date" />
-
-        <label>Categoria</label>
-        <select id="inpCat"></select>
-
-        <label>Detalhes</label>
-        <input id="inpDet" placeholder="Ex: combustível + placa / nota" />
-
-        <div class="row">
-          <div>
-            <label>Valor (R$)</label>
-            <input id="inpVal" inputmode="decimal" placeholder="0,00" />
-          </div>
-          <div>
-            <label>Reembolsável</label>
-            <select id="inpReemb">
-              <option value="SIM">SIM</option>
-              <option value="NAO">NÃO</option>
+    <!-- LOGIN AREA -->
+    <section id="loginArea" class="wrap">
+        <div class="card">
+            <h2>Login</h2>
+            <p class="muted">Entre com seu usuário e senha.</p>
+            
+            <label>Perfil</label>
+            <select id="loginRole">
+                <option value="ADMIN">Administrador</option>
+                <option value="USER">Usuário</option>
             </select>
-          </div>
+
+            <label>Usuário</label>
+            <input id="loginUser" type="text" placeholder="Seu usuário" autocomplete="username">
+
+            <label>Senha</label>
+            <div class="passRow">
+                <input id="loginPass" type="password" placeholder="••••••••" autocomplete="current-password">
+                <button class="eyeBtn" type="button" onclick="App.togglePass('loginPass')">👁</button>
+            </div>
+
+            <button class="btn btn-primary full" onclick="App.login()">Entrar</button>
+            <div id="loginMsg" class="msg"></div>
+            
+            <p class="muted small" style="margin-top:15px">
+                Primeiro acesso: senha padrão <b>user123</b>
+            </p>
+        </div>
+    </section>
+
+    <!-- CHANGE PASSWORD AREA -->
+    <section id="pwArea" class="wrap hidden">
+        <div class="card">
+            <h2>Nova Senha</h2>
+            <p class="muted">Você precisa trocar sua senha no primeiro acesso.</p>
+            
+            <label>Nova Senha</label>
+            <div class="passRow">
+                <input id="pw1" type="password" placeholder="Mínimo 4 caracteres">
+                <button class="eyeBtn" type="button" onclick="App.togglePass('pw1')">👁</button>
+            </div>
+
+            <label>Confirmar Nova Senha</label>
+            <div class="passRow">
+                <input id="pw2" type="password" placeholder="Repita a senha">
+                <button class="eyeBtn" type="button" onclick="App.togglePass('pw2')">👁</button>
+            </div>
+
+            <button class="btn btn-primary full" onclick="App.changePassword()">Salvar e Entrar</button>
+            <div id="pwMsg" class="msg"></div>
+        </div>
+    </section>
+
+    <!-- APP MAIN AREA -->
+    <section id="appArea" class="main hidden">
+        <div class="left">
+            <!-- REGISTER EXPENSE -->
+            <div id="tab_lancamentos" class="card">
+                <h3>Registrar Despesa</h3>
+                
+                <label>Obra</label>
+                <select id="obraSelect" onchange="App.onChangeObra()"></select>
+
+                <label>Data</label>
+                <input id="inpData" type="date">
+
+                <label>Categoria</label>
+                <select id="inpCat"></select>
+
+                <label>Detalhes / Descrição</label>
+                <input id="inpDet" type="text" placeholder="O que foi comprado?">
+
+                <div class="row">
+                    <div style="flex:2">
+                        <label>Valor (R$)</label>
+                        <input id="inpVal" type="text" inputmode="decimal" placeholder="0,00">
+                    </div>
+                    <div style="flex:1">
+                        <label>Reembolsável?</label>
+                        <select id="inpReemb">
+                            <option value="SIM">SIM</option>
+                            <option value="NAO">NÃO</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <label>Comprovante / Nota (Opcional)</label>
+                <div class="row">
+                    <button class="btn full" onclick="document.getElementById('notaFile').click()">📎 Arquivo</button>
+                    <button class="btn btn-primary full" onclick="document.getElementById('notaCam').click()">📸 Câmera</button>
+                </div>
+                <input type="file" id="notaFile" accept="image/*,application/pdf" style="display:none" onchange="App.onNotaSelected(this.files[0])">
+                <input type="file" id="notaCam" accept="image/*" capture="environment" style="display:none" onchange="App.onNotaSelected(this.files[0])">
+
+                <div id="notaPreviewArea" class="hidden" style="margin-top:10px">
+                    <div class="preview-container">
+                        <img id="notaImg" src="" alt="Preview">
+                        <button class="btn-close" onclick="App.clearNota()">×</button>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary full" style="margin-top:15px" onclick="App.registerExpense()">Salvar Lançamento</button>
+                <div id="msg" class="msg"></div>
+            </div>
+
+            <!-- RELATORIOS TAB (CONTENT LOADED DYNAMICALLY) -->
+            <div id="tab_relatorios" class="hidden">
+                <div class="card">
+                    <h3>Relatórios e Exportação</h3>
+                    <p class="muted">Visualize e exporte os dados da obra selecionada.</p>
+                    <button class="btn full" onclick="App.printReport()">🖨️ Gerar PDF / Imprimir</button>
+                </div>
+            </div>
+
+            <!-- ADMIN TAB (CONTENT LOADED DYNAMICALLY) -->
+            <div id="tab_admin" class="hidden">
+                <div class="card">
+                    <h3>Painel Administrativo</h3>
+                    <div class="admin-tabs">
+                        <button id="sadm_users" class="tab-btn" onclick="App.adminTab('users')">Usuários</button>
+                        <button id="sadm_works" class="tab-btn" onclick="App.adminTab('works')">Obras</button>
+                        <button id="sadm_emails" class="tab-btn" onclick="App.adminTab('emails')">E-mails</button>
+                        <button id="sadm_logo" class="tab-btn" onclick="App.adminTab('logo')">Branding</button>
+                        <button id="sadm_month" class="tab-btn" onclick="App.adminTab('month')">Fechamento</button>
+                    </div>
+
+                    <div id="adm_users" class="adm-panel hidden">
+                        <h4>Gerenciar Usuários</h4>
+                        <div class="form-group">
+                            <input id="au_user" placeholder="Usuário">
+                            <input id="au_nome" placeholder="Nome Completo">
+                            <input id="au_email" placeholder="E-mail">
+                            <select id="au_role">
+                                <option value="USER">Usuário</option>
+                                <option value="ADMIN">Administrador</option>
+                            </select>
+                            <button class="btn btn-primary" onclick="App.adminUserUpsert()">Adicionar/Atualizar</button>
+                        </div>
+                        <div id="userList" class="list-container"></div>
+                    </div>
+
+                    <div id="adm_works" class="adm-panel hidden">
+                        <h4>Gerenciar Obras</h4>
+                        <div class="form-group">
+                            <input id="aw_id" placeholder="ID da Obra (ex: OBRA01)">
+                            <input id="aw_nome" placeholder="Nome da Obra">
+                            <select id="aw_ativa">
+                                <option value="true">Ativa</option>
+                                <option value="false">Inativa</option>
+                            </select>
+                            <button class="btn btn-primary" onclick="App.adminWorkUpsert()">Salvar Obra</button>
+                        </div>
+                        <div id="workList" class="list-container"></div>
+                    </div>
+
+                    <div id="adm_emails" class="adm-panel hidden">
+                        <h4>Notificações por E-mail</h4>
+                        <div class="form-group">
+                            <input id="ae_email" placeholder="E-mail para relatório">
+                            <input id="ae_nome" placeholder="Nome do destinatário">
+                            <button class="btn btn-primary" onclick="App.adminEmailUpsert()">Adicionar</button>
+                        </div>
+                        <div id="emailList" class="list-container"></div>
+                        <div class="divider"></div>
+                        <button class="btn btn-secondary full" onclick="App.sendMonthReport()">📧 Enviar Relatório do Mês Agora</button>
+                        <div id="emailMsg" class="msg"></div>
+                    </div>
+
+                    <div id="adm_logo" class="adm-panel hidden">
+                        <h4>Personalização (Branding)</h4>
+                        <label>Nome da Empresa/App</label>
+                        <input id="cfgName" type="text">
+                        
+                        <label>Cor Principal</label>
+                        <div class="row" style="align-items: center">
+                            <input id="cfgColor" type="color" oninput="document.getElementById('cfgColorHex').textContent = this.value">
+                            <span id="cfgColorHex" class="muted">#0b2a4a</span>
+                        </div>
+
+                        <label>Categorias (uma por linha)</label>
+                        <textarea id="cfgCats" rows="5"></textarea>
+
+                        <label>Logotipo</label>
+                        <div class="logo-config">
+                            <div id="logoNone" class="muted small">Nenhuma logo enviada.</div>
+                            <img id="logoPreview" class="hidden" style="max-height: 50px; margin-bottom: 10px">
+                            <button class="btn btn-sm" onclick="document.getElementById('cfgLogoFile').click()">Alterar Logo</button>
+                            <input type="file" id="cfgLogoFile" accept="image/*" style="display:none" onchange="App.onLogoSelected(this.files[0])">
+                        </div>
+
+                        <button class="btn btn-primary full" style="margin-top:20px" onclick="App.saveConfig()">Salvar Configurações</button>
+                        <div id="cfgMsg" class="msg"></div>
+                    </div>
+
+                    <div id="adm_month" class="adm-panel hidden">
+                        <h4>Fechamento de Mês</h4>
+                        <p class="muted small">Bloqueia lançamentos para o mês selecionado.</p>
+                        <div class="row">
+                            <input id="monthRef" type="month">
+                            <button class="btn btn-danger" onclick="App.closeMonth()">Bloquear</button>
+                            <button class="btn" onclick="App.reopenMonth()">Desbloquear</button>
+                        </div>
+                        <div id="closedList" class="list-container" style="margin-top:15px"></div>
+                    </div>
+
+                    <div id="admMsg" class="msg"></div>
+                </div>
+            </div>
         </div>
 
-        <div class="divider"></div>
+        <div class="right">
+            <!-- DASHBOARD / SUMMARY -->
+            <div class="card">
+                <div class="row" style="align-items: flex-end">
+                    <div style="flex:1">
+                        <label>Filtrar Mês</label>
+                        <input id="fMes" type="month" onchange="App.refreshAll()">
+                    </div>
+                    <div class="tab-nav">
+                        <button id="tabBtnLanc" class="btn active" onclick="App.mainTab('lancamentos')">Lançar</button>
+                        <button id="tabBtnRel" class="btn" onclick="App.mainTab('relatorios')">Relatórios</button>
+                        <button id="tabBtnAdmin" class="btn hidden" onclick="App.mainTab('admin')">Admin</button>
+                    </div>
+                </div>
+            </div>
 
-        <label>Nota fiscal (opcional)</label>
-        <div class="row">
-          <div>
-            <button class="btn full" type="button" onclick="App.openPicker()">Escolher</button>
-            <input id="notaFile" type="file" accept="image/*" onchange="App.onNotaSelected(this.files?.[0])" style="display:none;">
-          </div>
-          <div>
-            <button class="btn btn-primary full" type="button" onclick="App.openCamera()">Tirar foto</button>
-            <input id="notaCam" type="file" accept="image/*" capture="environment" onchange="App.onNotaSelected(this.files?.[0])" style="display:none;">
-          </div>
+            <div class="kpis">
+                <div class="kpi">
+                    <span class="t">Total no Mês</span>
+                    <span id="kTotal" class="v">R$ 0,00</span>
+                </div>
+                <div class="kpi">
+                    <span class="t">Status</span>
+                    <span id="kStatus" class="v">-</span>
+                </div>
+                <div class="kpi">
+                    <span class="t">Maior Gasto</span>
+                    <span id="kTop" class="v">-</span>
+                </div>
+                <div class="kpi">
+                    <span class="t">Menor Gasto</span>
+                    <span id="kBottom" class="v">-</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Evolução Diária</h3>
+                <div class="chart-container">
+                    <canvas id="chartLine"></canvas>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Resumo por Categoria</h3>
+                <table class="table-resumo">
+                    <thead>
+                        <tr>
+                            <th>Categoria</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbResumo"></tbody>
+                </table>
+            </div>
         </div>
+    </section>
 
-        <div id="notaArea" class="hidden" style="margin-top:12px;">
-          <img id="notaPreview" alt="preview" class="preview" />
-          <div class="row" style="margin-top:10px;">
-            <div><a id="notaLink" class="btn full hidden" target="_blank">Abrir nota</a></div>
-            <div><button id="btnDeleteNota" class="btn btn-danger full hidden" onclick="App.deleteNota()">Apagar nota</button></div>
-          </div>
-          <div id="notaMsg" class="msg"></div>
-        </div>
-
-        <button class="btn btn-primary full" style="margin-top:12px;" onclick="App.registerExpense()">Registrar</button>
-        <div id="msg" class="msg"></div>
-      </div>
-    </div>
-
-    <div class="right">
-      <div class="card">
-        <div class="row" style="align-items:flex-end;">
-          <div>
-            <label>Mês</label>
-            <input id="fMes" type="month" onchange="App.refreshAll()" />
-          </div>
-          <div style="display:flex; justify-content:flex-end; gap:10px;">
-            <button class="btn btn-primary" onclick="App.printPdf()">Imprimir relatório (PDF)</button>
-            <button id="btnAdmin" class="btn hidden" onclick="App.toggleAdmin()">Admin</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="kpis">
-        <div class="kpi"><div class="t">Total no mês</div><div id="kTotal" class="v">R$ 0,00</div></div>
-        <div class="kpi"><div class="t">Maior categoria</div><div id="kTop" class="v">-</div></div>
-        <div class="kpi"><div class="t">Menor categoria</div><div id="kBottom" class="v">-</div></div>
-        <div class="kpi"><div class="t">Status do mês</div><div id="kStatus" class="v">-</div></div>
-      </div>
-
-      <div class="card">
-        <h3>Evolução diária</h3>
-        <canvas id="chartLine" height="140"></canvas>
-      </div>
-
-      <div class="card">
-        <h3>Resumo por categoria</h3>
-        <table>
-          <thead><tr><th>Categoria</th><th>Total</th></tr></thead>
-          <tbody id="tbResumo"></tbody>
-        </table>
-      </div>
-
-      <!-- ADMIN PANEL -->
-      <div id="adminArea" class="card hidden">
-        <h3>Administração</h3>
-
-        <div class="tabs">
-          <button class="tab" onclick="App.adminTab('users')">Usuários</button>
-          <button class="tab" onclick="App.adminTab('works')">Obras</button>
-          <button class="tab" onclick="App.adminTab('emails')">Emails</button>
-          <button class="tab" onclick="App.adminTab('logo')">Logo/Config</button>
-          <button class="tab" onclick="App.adminTab('month')">Fechamento</button>
-        </div>
-
-        <div id="adm_users" class="adm hidden"></div>
-        <div id="adm_works" class="adm hidden"></div>
-        <div id="adm_emails" class="adm hidden"></div>
-        <div id="adm_logo" class="adm hidden"></div>
-        <div id="adm_month" class="adm hidden"></div>
-
-        <div id="admMsg" class="msg"></div>
-      </div>
-    </div>
-  </section>
-
-  <script src="app.js"></script>
-  <script>
-    if('serviceWorker' in navigator){
-      navigator.serviceWorker.register('service-worker.js').catch(()=>{});
-    }
-  </script>
+    <script src="app.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('service-worker.js').catch(() => {});
+        }
+    </script>
 </body>
 </html>
