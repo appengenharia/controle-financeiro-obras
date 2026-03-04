@@ -1,4 +1,4 @@
-const API_URL = "https://script.google.com/macros/s/SEU_ID/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbzMwvV9rippp06nXgwfYPpvgQ0bbczDbZimIKw5sTdcliZDEFtn2KspDvYjU71Z76CXog/exec";
 
 const App = (() => {
   let TOKEN = "";
@@ -705,3 +705,4 @@ const App = (() => {
   };
 
 })();
+
