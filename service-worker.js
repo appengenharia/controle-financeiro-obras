@@ -1,4 +1,4 @@
-const CACHE = "cfo-v3-cache-v1";
+const CACHE = "cfo-v3-cache-v2";
 const ASSETS = ["./","./index.html","./style.css","./app.js","./manifest.json"];
 
 self.addEventListener("install", (e)=>{
@@ -21,4 +21,5 @@ self.addEventListener("fetch", (e)=>{
       }).catch(()=>cached);
     })
   );
+
 });
