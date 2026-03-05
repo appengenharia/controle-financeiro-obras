@@ -1,3 +1,4 @@
+// v7 - window.App fix
 const API_URL = "https://script.google.com/macros/s/AKfycbx0KwGi6RSPkKB1jg5ydmJM-vOT1qVlpuEXKTbXHwUxIo-3zp8EgJavP5ejqhPqDOAudg/exec";
 
 window.App = (() => {
@@ -370,6 +371,7 @@ window.App = (() => {
           };
 
 })();
+
 
 
 
