@@ -1,6 +1,6 @@
 const API_URL = "https://script.google.com/macros/s/AKfycbx0KwGi6RSPkKB1jg5ydmJM-vOT1qVlpuEXKTbXHwUxIo-3zp8EgJavP5ejqhPqDOAudg/exec";
 
-const App = (() => {
+window.App = (() => {
     let TOKEN = "", USER = null, WORKS = [], CATEGORIAS = [];
     let currentObraId = "";
     let brand = { name: "Controle Financeiro de Obras", color: "#0b2a4a", logo_url: "" };
@@ -367,6 +367,7 @@ const App = (() => {
           };
 
 })();
+
 
 
 
