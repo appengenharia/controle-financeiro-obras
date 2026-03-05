@@ -1,4 +1,4 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbzvgpryvDAtYAmgkxV9q_PndBWofd0ZLE8eiNJZ-Fc_WpVdKlk3LIHflWHbMznt2KQ-lw/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbzgpryvDAtYAmgkxV9q_PndBWofd0ZLE8eiNJZ-Fc_WpVdKlk3LIHflWHbMznt2KQ-lw/exec";
 
 const App = (() => {
     let TOKEN = "", USER = null, WORKS = [], CATEGORIAS = [];
@@ -366,4 +366,5 @@ const App = (() => {
         closeMonth, reopenMonth
     };
 })();
+
 
